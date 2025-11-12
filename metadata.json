@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Fuel Control Pro",
+  "description": "An application to manage vehicle fuel consumption through a request and authorization workflow. Users can register vehicles, request them for trips, and an authorizer can approve them. The system provides detailed reports on consumption per vehicle and user.",
+  "requestFramePermissions": []
+}
