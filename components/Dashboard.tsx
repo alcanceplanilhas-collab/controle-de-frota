@@ -1,13 +1,15 @@
+
 import React from 'react';
-import { AppState, TripRequestStatus, View } from '../types';
-import { CarIcon, ClipboardListIcon } from '../constants';
+import { TripRequest, TripRequestStatus, Vehicle, User, View } from '../types';
+import { CarIcon, ClipboardListIcon } from './Icons';
 
 interface DashboardProps {
-  state: AppState;
+  vehicles: Vehicle[];
+  tripRequests: TripRequest[];
+  users: User[];
   onNavigate: (view: View) => void;
 }
 
-// Fix: Replaced JSX.Element with React.ReactElement to resolve namespace issue.
 const StatCard: React.FC<{ title: string; value: string | number; icon: React.ReactElement; color: string }> = ({ title, value, icon, color }) => (
     <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md flex items-center space-x-4">
         <div className={`rounded-full p-3 ${color}`}>
@@ -21,8 +23,7 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.Re
 );
 
 
-const Dashboard: React.FC<DashboardProps> = ({ state, onNavigate }) => {
-  const { vehicles, tripRequests } = state;
+const Dashboard: React.FC<DashboardProps> = ({ vehicles, tripRequests, users, onNavigate }) => {
 
   const pendingRequests = tripRequests.filter(r => r.status === TripRequestStatus.Pending).length;
   const activeTrips = tripRequests.filter(r => r.status === TripRequestStatus.Approved || r.status === TripRequestStatus.InUse).length;
@@ -30,11 +31,8 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onNavigate }) => {
 
   const latestCompletedTrips = tripRequests
     .filter(r => r.status === TripRequestStatus.Completed)
-    .sort((a, b) => new Date(b.completedDate!).getTime() - new Date(a.completedDate!).getTime())
+    .sort((a, b) => new Date(b.completed_date!).getTime() - new Date(a.completed_date!).getTime())
     .slice(0, 5);
-
-  const findVehicle = (id: string) => vehicles.find(v => v.id === id);
-  const findUser = (id: string) => state.users.find(u => u.id === id);
 
   return (
     <div className="space-y-6">
@@ -60,13 +58,11 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onNavigate }) => {
                     </thead>
                     <tbody>
                         {latestCompletedTrips.length > 0 ? latestCompletedTrips.map(trip => {
-                            const vehicle = findVehicle(trip.vehicleId);
-                            const user = findUser(trip.userId);
                             return (
                                 <tr key={trip.id} className="bg-white border-b dark:bg-slate-800 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600">
-                                    <td className="px-6 py-4 font-medium text-slate-900 whitespace-nowrap dark:text-white">{vehicle?.model} ({vehicle?.plate})</td>
-                                    <td className="px-6 py-4">{user?.name}</td>
-                                    <td className="px-6 py-4">{trip.distanceKm?.toFixed(2)} km</td>
+                                    <td className="px-6 py-4 font-medium text-slate-900 whitespace-nowrap dark:text-white">{trip.vehicles?.model} ({trip.vehicles?.plate})</td>
+                                    <td className="px-6 py-4">{trip.users?.name}</td>
+                                    <td className="px-6 py-4">{trip.distance_km?.toFixed(2)} km</td>
                                 </tr>
                             );
                         }) : (
