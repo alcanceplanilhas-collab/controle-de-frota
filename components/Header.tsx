@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, theme, setThem
             {parameter?.logo && (
                 <img src={parameter.logo} alt="Logo da Empresa" className="h-10 mr-4 object-contain" />
              )}
-            <h1 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Fuel Control Pro</h1>
+            <h1 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Controle de Frota</h1>
           </div>
           
           <div className="flex items-center">
